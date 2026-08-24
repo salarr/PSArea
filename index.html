@@ -1,0 +1,2419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap"
+    rel="stylesheet"
+>
+
+<title>Police Station Area Search</title>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: "Noto Nastaliq Urdu", serif;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+    font-family: "Noto Nastaliq Urdu", serif;
+}
+
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    padding: 30px 15px;
+
+    background: #f3eee5;
+
+    color: #2f241d;
+
+}
+
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(79,142,247,.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            30deg,
+            rgba(79,142,247,.03) 1px,
+            transparent 1px
+        );
+
+    background-size: 38px 38px;
+
+}
+
+
+.container {
+
+    max-width: 1100px;
+
+    margin: 20px auto;
+
+    padding: 25px;
+
+    border-radius: 22px;
+
+    background: rgba(255,255,255,.88);
+
+    border: 1px solid rgba(255,255,255,.88);
+
+    box-shadow:
+        0 24px 55px rgba(124,58,237,.15),
+        inset 0 1px 0 rgba(255,255,255,.95);
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+.main-heading {
+
+    text-align: center;
+
+    margin: 0 0 8px;
+
+    color: #3f281d;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+}
+
+
+h2 {
+
+    text-align: center;
+
+    margin: 0 0 20px;
+
+    color: #74665a;
+
+    font-size: 17px;
+
+}
+
+
+.search-area {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+
+    position: relative;
+
+}
+
+
+#searchBox {
+
+    flex: 1;
+
+    width: 100%;
+
+    padding: 16px 20px;
+
+    font-size: 18px;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(124,58,237,.22);
+
+    outline: none;
+
+    color: #2f241d;
+
+    background: rgba(255,255,255,.68);
+
+    box-shadow:
+        inset 0 3px 8px rgba(200,121,65,.08),
+        0 10px 28px rgba(200,121,65,.10);
+
+}
+
+
+#searchBox:focus {
+
+    border-color: #c87941;
+
+    box-shadow:
+        0 0 0 4px rgba(200,121,65,.12),
+        0 14px 32px rgba(200,121,65,.16);
+
+}
+
+
+#searchBox::placeholder {
+
+    color: #93a3b8;
+
+}
+
+
+button {
+
+    border: none;
+
+    border-radius: 14px;
+
+    padding: 0 20px;
+
+    background: #c87941;
+
+    color: white;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 0 rgba(91,35,104,.30),
+        0 14px 28px rgba(236,72,153,.24);
+
+    transition: .15s ease;
+
+}
+
+
+button:hover {
+
+    transform: translateY(-2px);
+
+}
+
+
+button:active {
+
+    transform: translateY(3px);
+
+}
+
+
+/* ==========================================
+   SUGGESTIONS
+   ========================================== */
+
+.suggestions-box {
+
+    position: absolute;
+
+    left: 0;
+
+    right: 400px;
+
+    top: calc(100% + 5px);
+
+    background: white;
+
+    border: 1px solid rgba(200,121,65,.16);
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 20px 45px rgba(91,35,104,.18);
+
+    overflow: hidden;
+
+    z-index: 9999;
+
+    display: none;
+
+}
+
+
+.suggestion-item {
+
+    padding: 10px 15px;
+
+    cursor: pointer;
+
+    border-bottom: 1px solid #eef2f7;
+
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+
+    text-align: left;
+
+}
+
+
+.suggestion-item:hover {
+
+    background: #f1f5ff;
+
+}
+
+
+.suggestion-area {
+
+    font-weight: 600;
+
+    color: #1f2a3c;
+
+}
+
+
+.suggestion-area::before {
+
+    content: "✨ ";
+
+}
+
+
+.suggestion-ps {
+
+    color: #8a5a34;
+
+    font-size: 13px;
+
+    margin-top: 2px;
+
+}
+
+
+.suggestion-ps::before {
+
+    content: "🚓 ";
+
+}
+
+
+.dim-text {
+
+    color: #aab2bf;
+
+}
+
+
+.match-text {
+
+    color: #3f281d;
+
+    font-weight: 700;
+
+    background: rgba(200,121,65,.16);
+
+    border-radius: 3px;
+
+    padding: 0 1px;
+
+}
+
+
+/* ==========================================
+   TOAST
+   ========================================== */
+
+#toast {
+
+    position: fixed;
+
+    top: 20px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%)
+        translateY(-20px);
+
+    background: #5b3a29;
+
+    color: white;
+
+    padding: 12px 24px;
+
+    border-radius: 13px;
+
+    font-size: 14px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.20);
+
+    z-index: 99999;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: .3s ease;
+
+    text-align: center;
+
+    min-width: 280px;
+
+}
+
+
+#toast.show {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+
+}
+
+
+#toast.loading {
+
+    background: #8a5a34;
+
+}
+
+
+#toast.success {
+
+    background: #1c7a3f;
+
+}
+
+
+#toast.error {
+
+    background: #d93025;
+
+}
+
+
+.toast-line-1 {
+
+    display: block;
+
+    font-weight: 700;
+
+}
+
+
+.toast-line-2 {
+
+    display: block;
+
+    font-size: 12px;
+
+    margin-top: 2px;
+
+    opacity: .95;
+
+}
+
+
+/* ==========================================
+   MODAL
+   ========================================== */
+
+.modal-overlay {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(47,36,29,.45);
+
+    backdrop-filter: blur(3px);
+
+    align-items: center;
+
+    justify-content: center;
+
+    z-index: 999;
+
+    padding: 16px;
+
+}
+
+
+.modal-overlay.open {
+
+    display: flex;
+
+}
+
+
+.modal-box {
+
+    background: #fffdfa;
+
+    width: 100%;
+
+    max-width: 440px;
+
+    border-radius: 20px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 24px 55px rgba(124,58,237,.20);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+}
+
+
+.modal-box h3 {
+
+    margin: 0 0 18px;
+
+    color: #5b3a29;
+
+    text-align: center;
+
+}
+
+
+.modal-box label {
+
+    display: block;
+
+    font-size: 13.5px;
+
+    color: #74665a;
+
+    margin: 12px 0 6px;
+
+}
+
+
+.modal-box select,
+.modal-box input,
+.modal-box textarea {
+
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    border: 1px solid #ddd;
+
+    font-size: 15px;
+
+    outline: none;
+
+    font-family:
+        "Noto Nastaliq Urdu",
+        serif;
+
+}
+
+
+.modal-box textarea {
+
+    min-height: 110px;
+
+    resize: vertical;
+
+}
+
+
+.modal-box select:focus,
+.modal-box input:focus,
+.modal-box textarea:focus {
+
+    border-color: #c87941;
+
+}
+
+
+.modal-msg {
+
+    min-height: 20px;
+
+    margin-top: 12px;
+
+    font-size: 13.5px;
+
+    font-weight: 600;
+
+}
+
+
+.modal-msg.loading {
+
+    color: #8a5a34;
+
+}
+
+
+.modal-msg.success {
+
+    color: #1c7a3f;
+
+}
+
+
+.modal-msg.error {
+
+    color: #d93025;
+
+}
+
+
+.modal-actions {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 18px;
+
+}
+
+
+.modal-actions button {
+
+    flex: 1;
+
+    min-height: 45px;
+
+}
+
+
+.btn-secondary {
+
+    background: #9aa4b2 !important;
+
+}
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media(max-width:600px) {
+
+    body {
+
+        padding: 10px;
+
+    }
+
+
+    .container {
+
+        padding: 15px;
+
+        margin: 5px auto;
+
+    }
+
+
+    .main-heading {
+
+        font-size: 22px;
+
+    }
+
+
+    h2 {
+
+        font-size: 14px;
+
+    }
+
+
+    .search-area {
+
+        flex-direction: column;
+
+    }
+
+
+    #searchBox {
+
+        font-size: 16px;
+
+    }
+
+
+    button {
+
+        width: 100%;
+
+        min-height: 46px;
+
+    }
+
+
+    .suggestions-box {
+
+        right: 0;
+
+        top: 54px;
+
+    }
+
+
+    #toast {
+
+        min-width: 260px;
+
+        max-width: 90%;
+
+    }
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1 class="main-heading">
+
+        🛡️ Find Your Police Station
+
+    </h1>
+
+
+    <h2>
+
+        📍 Search Area &nbsp; • &nbsp; 🚓 Police Station
+
+    </h2>
+
+
+    <div class="search-area">
+
+
+        <input
+            type="text"
+            id="searchBox"
+            placeholder="Search area / police station..."
+            autocomplete="off"
+        >
+
+
+        <div
+            id="suggestionsBox"
+            class="suggestions-box"
+        ></div>
+
+
+        <button
+            onclick="clearSearch()"
+        >
+            ✕ Clear
+        </button>
+
+
+        <button
+            onclick="openAddModal()"
+        >
+            ➕ Add
+        </button>
+
+
+        <button
+            onclick="openCorrectionModal()"
+        >
+            ✏️ Correction
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- ==========================================
+     TOAST
+     ========================================== -->
+
+<div id="toast"></div>
+
+
+<!-- ==========================================
+     ADD MODAL
+     ========================================== -->
+
+<div
+    id="addModalOverlay"
+    class="modal-overlay"
+>
+
+
+    <div class="modal-box">
+
+
+        <h3>
+            ➕ Naya Area Add Karein
+        </h3>
+
+
+        <label for="psSelect">
+
+            Police Station منتخب کریں
+
+        </label>
+
+
+        <select
+            id="psSelect"
+        ></select>
+
+
+        <label for="newAreaInput">
+
+            Area of Police Station لکھیں
+
+        </label>
+
+
+        <input
+            type="text"
+            id="newAreaInput"
+            placeholder="مثال: Model Town Block A"
+            autocomplete="off"
+        >
+
+
+        <div
+            id="addModalMsg"
+            class="modal-msg"
+        ></div>
+
+
+        <div class="modal-actions">
+
+
+            <button
+                class="btn-secondary"
+                onclick="closeAddModal()"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                onclick="submitNewEntry()"
+            >
+                💾 Save
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     CORRECTION MODAL
+     ========================================== -->
+
+<div
+    id="correctionModalOverlay"
+    class="modal-overlay"
+>
+
+
+    <div class="modal-box">
+
+
+        <h3>
+            ✏️ Correction Submit Karein
+        </h3>
+
+
+        <label for="correctionPsSelect">
+
+            Police Station منتخب کریں
+
+        </label>
+
+
+        <select
+            id="correctionPsSelect"
+        ></select>
+
+
+        <label for="correctionInput">
+
+            Correction لکھیں
+
+        </label>
+
+
+        <textarea
+            id="correctionInput"
+            placeholder="مثال: Is Police Station ka Area Name correct karein..."
+        ></textarea>
+
+
+        <div
+            id="correctionModalMsg"
+            class="modal-msg"
+        ></div>
+
+
+        <div class="modal-actions">
+
+
+            <button
+                class="btn-secondary"
+                onclick="closeCorrectionModal()"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                onclick="submitCorrection()"
+            >
+                💾 Submit
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* ==========================================
+   GOOGLE APPS SCRIPT
+   ========================================== */
+
+const GOOGLE_SHEET_API =
+"https://script.google.com/macros/s/AKfycbzsZY4QHGaskZwoXyrnmGSObPzDdo8U-DhfSKSSfzPmsKUCGoFNkQL4EsBsf20_H_PY/exec";
+
+
+let policeStations = [];
+
+let rawPoliceStations = [];
+
+
+/* ==========================================
+   EXPAND AREAS
+   ========================================== */
+
+function expandAreas(data) {
+
+    const expanded = [];
+
+
+    data.forEach(item => {
+
+        const ps =
+            String(
+                item.ps ?? ""
+            ).trim();
+
+
+        const areaRaw =
+            String(
+                item.area ?? ""
+            );
+
+
+        const parts =
+            areaRaw
+            .split(/\s*[,،\/\n]+\s*/)
+            .map(
+                p => p.trim()
+            )
+            .filter(
+                p => p !== ""
+            );
+
+
+        if (!parts.length) {
+
+            expanded.push({
+                ps: ps,
+                area: areaRaw.trim()
+            });
+
+        }
+
+        else {
+
+            parts.forEach(
+                part => {
+
+                    expanded.push({
+                        ps: ps,
+                        area: part
+                    });
+
+                }
+            );
+
+        }
+
+    });
+
+
+    return expanded;
+
+}
+
+
+/* ==========================================
+   TOAST
+   ========================================== */
+
+let toastTimer;
+
+
+function setStatus(
+    message,
+    stateClass
+) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    let developerText =
+        "Mr. Majid Ali";
+
+
+    if (
+        stateClass ===
+        "loading-state"
+    ) {
+
+        developerText =
+            "Developed by Mr. Majid Ali";
+
+    }
+
+
+    toast.innerHTML = `
+
+        <span class="toast-line-1">
+            ${escapeHTML(message)}
+        </span>
+
+        <span class="toast-line-2">
+            ${escapeHTML(developerText)}
+        </span>
+
+    `;
+
+
+    toast.className = "";
+
+
+    if (
+        stateClass ===
+        "ready-state"
+    ) {
+
+        toast.classList.add(
+            "success"
+        );
+
+    }
+
+    else if (
+        stateClass ===
+        "error-state"
+    ) {
+
+        toast.classList.add(
+            "error"
+        );
+
+    }
+
+    else {
+
+        toast.classList.add(
+            "loading"
+        );
+
+    }
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    toastTimer =
+        setTimeout(
+            function() {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            3500
+        );
+
+}
+
+
+/* ==========================================
+   LOAD DATA
+   ========================================== */
+
+async function loadData() {
+
+
+    setStatus(
+        "⏳ Wait data is loading...",
+        "loading-state"
+    );
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                GOOGLE_SHEET_API +
+                "?t=" +
+                new Date().getTime()
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Google Sheet connection failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!Array.isArray(data)) {
+
+            throw new Error(
+                "Invalid data received"
+            );
+
+        }
+
+
+        /*
+         * صرف approved records.
+         *
+         * پرانے records جن میں status نہیں
+         * وہ بھی search میں رہیں گے۔
+         */
+
+        rawPoliceStations =
+            data.filter(
+                item => {
+
+                    const status =
+                        String(
+                            item.status ??
+                            item.Status ??
+                            item.approval ??
+                            item.Approval ??
+                            ""
+                        )
+                        .trim()
+                        .toLowerCase();
+
+
+                    return (
+
+                        !status ||
+
+                        [
+                            "approved",
+                            "approve",
+                            "yes",
+                            "true",
+                            "1"
+                        ].includes(status)
+
+                    );
+
+                }
+            );
+
+
+        policeStations =
+            expandAreas(
+                rawPoliceStations
+            );
+
+
+        setStatus(
+            "✅ You Can Search Now...",
+            "ready-state"
+        );
+
+
+        return true;
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            error
+        );
+
+
+        setStatus(
+            "❌ Failed to Load Data",
+            "error-state"
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* ==========================================
+   SEARCH
+   ========================================== */
+
+function searchData() {
+
+
+    const searchBox =
+        document.getElementById(
+            "searchBox"
+        );
+
+
+    const rawInput =
+        searchBox.value.trim();
+
+
+    if (!rawInput) {
+
+        hideSuggestions();
+
+        return;
+
+    }
+
+
+    showSuggestions(
+        rawInput
+    );
+
+}
+
+
+/* ==========================================
+   SUGGESTIONS
+   ========================================== */
+
+function showSuggestions(
+    rawInput
+) {
+
+
+    const box =
+        document.getElementById(
+            "suggestionsBox"
+        );
+
+
+    if (
+        !rawInput ||
+        !policeStations.length
+    ) {
+
+        hideSuggestions();
+
+        return;
+
+    }
+
+
+    const q =
+        rawInput.toLowerCase();
+
+
+    const matches =
+        policeStations
+        .filter(
+            item => {
+
+                const area =
+                    String(
+                        item.area ?? ""
+                    )
+                    .toLowerCase();
+
+
+                const ps =
+                    String(
+                        item.ps ?? ""
+                    )
+                    .toLowerCase();
+
+
+                return (
+                    area.includes(q) ||
+                    ps.includes(q)
+                );
+
+            }
+        )
+        .slice(0,8);
+
+
+    if (!matches.length) {
+
+        hideSuggestions();
+
+        return;
+
+    }
+
+
+    box.innerHTML = "";
+
+
+    matches.forEach(
+        item => {
+
+
+            const area =
+                String(
+                    item.area ?? ""
+                );
+
+
+            const ps =
+                String(
+                    item.ps ?? ""
+                );
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "suggestion-item";
+
+
+            const areaDiv =
+                document.createElement(
+                    "div"
+                );
+
+
+            areaDiv.className =
+                "suggestion-area";
+
+
+            areaDiv.appendChild(
+                buildHighlightedText(
+                    area,
+                    rawInput
+                )
+            );
+
+
+            const psDiv =
+                document.createElement(
+                    "div"
+                );
+
+
+            psDiv.className =
+                "suggestion-ps";
+
+
+            psDiv.textContent =
+                ps;
+
+
+            row.appendChild(
+                areaDiv
+            );
+
+
+            row.appendChild(
+                psDiv
+            );
+
+
+            row.addEventListener(
+                "mousedown",
+                function(event) {
+
+                    event.preventDefault();
+
+
+                    selectSuggestion(
+                        area,
+                        ps
+                    );
+
+                }
+            );
+
+
+            box.appendChild(
+                row
+            );
+
+        }
+    );
+
+
+    box.style.display =
+        "block";
+
+}
+
+
+/* ==========================================
+   HIGHLIGHT
+   ========================================== */
+
+function buildHighlightedText(
+    fullText,
+    query
+) {
+
+
+    const container =
+        document.createElement(
+            "span"
+        );
+
+
+    const lowerFull =
+        fullText.toLowerCase();
+
+
+    const lowerQuery =
+        query.toLowerCase();
+
+
+    const idx =
+        lowerFull.indexOf(
+            lowerQuery
+        );
+
+
+    if (
+        idx === -1 ||
+        !query
+    ) {
+
+        const dim =
+            document.createElement(
+                "span"
+            );
+
+
+        dim.className =
+            "dim-text";
+
+
+        dim.textContent =
+            fullText;
+
+
+        container.appendChild(
+            dim
+        );
+
+
+        return container;
+
+    }
+
+
+    const before =
+        fullText.substring(
+            0,
+            idx
+        );
+
+
+    const match =
+        fullText.substring(
+            idx,
+            idx + query.length
+        );
+
+
+    const after =
+        fullText.substring(
+            idx + query.length
+        );
+
+
+    if (before) {
+
+        const beforeSpan =
+            document.createElement(
+                "span"
+            );
+
+
+        beforeSpan.className =
+            "dim-text";
+
+
+        beforeSpan.textContent =
+            before;
+
+
+        container.appendChild(
+            beforeSpan
+        );
+
+    }
+
+
+    const matchSpan =
+        document.createElement(
+            "span"
+        );
+
+
+    matchSpan.className =
+        "match-text";
+
+
+    matchSpan.textContent =
+        match;
+
+
+    container.appendChild(
+        matchSpan
+    );
+
+
+    if (after) {
+
+        const afterSpan =
+            document.createElement(
+                "span"
+            );
+
+
+        afterSpan.className =
+            "dim-text";
+
+
+        afterSpan.textContent =
+            after;
+
+
+        container.appendChild(
+            afterSpan
+        );
+
+    }
+
+
+    return container;
+
+}
+
+
+/* ==========================================
+   SELECT SEARCH RESULT
+   ========================================== */
+
+function selectSuggestion(
+    area,
+    ps
+) {
+
+
+    const searchBox =
+        document.getElementById(
+            "searchBox"
+        );
+
+
+    searchBox.value =
+        area +
+        " - " +
+        ps;
+
+
+    hideSuggestions();
+
+
+    searchBox.focus();
+
+}
+
+
+/* ==========================================
+   HIDE SUGGESTIONS
+   ========================================== */
+
+function hideSuggestions() {
+
+
+    const box =
+        document.getElementById(
+            "suggestionsBox"
+        );
+
+
+    if (box) {
+
+        box.style.display =
+            "none";
+
+
+        box.innerHTML =
+            "";
+
+    }
+
+}
+
+
+/* ==========================================
+   CLEAR
+   ========================================== */
+
+function clearSearch() {
+
+
+    document.getElementById(
+        "searchBox"
+    ).value = "";
+
+
+    hideSuggestions();
+
+
+    document.getElementById(
+        "searchBox"
+    ).focus();
+
+}
+
+
+/* ==========================================
+   GET UNIQUE PS
+   ========================================== */
+
+function getUniquePS() {
+
+
+    return [
+        ...new Set(
+            rawPoliceStations
+            .map(
+                item =>
+                    String(
+                        item.ps ?? ""
+                    ).trim()
+            )
+            .filter(
+                ps => ps !== ""
+            )
+        )
+    ].sort();
+
+}
+
+
+/* ==========================================
+   ADD MODAL
+   ========================================== */
+
+function openAddModal() {
+
+
+    const select =
+        document.getElementById(
+            "psSelect"
+        );
+
+
+    select.innerHTML =
+        "";
+
+
+    const uniquePS =
+        getUniquePS();
+
+
+    uniquePS.forEach(
+        ps => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                ps;
+
+
+            option.textContent =
+                ps;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    if (!uniquePS.length) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            "";
+
+
+        option.textContent =
+            "Data Load ہونے دیں";
+
+
+        select.appendChild(
+            option
+        );
+
+    }
+
+
+    document.getElementById(
+        "newAreaInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "addModalMsg"
+    ).textContent = "";
+
+
+    document.getElementById(
+        "addModalOverlay"
+    )
+    .classList.add(
+        "open"
+    );
+
+}
+
+
+function closeAddModal() {
+
+
+    document.getElementById(
+        "addModalOverlay"
+    )
+    .classList.remove(
+        "open"
+    );
+
+}
+
+
+/* ==========================================
+   SUBMIT ADD
+   ========================================== */
+
+async function submitNewEntry() {
+
+
+    const ps =
+        document.getElementById(
+            "psSelect"
+        ).value.trim();
+
+
+    const area =
+        document.getElementById(
+            "newAreaInput"
+        ).value.trim();
+
+
+    const msg =
+        document.getElementById(
+            "addModalMsg"
+        );
+
+
+    if (!ps) {
+
+        msg.textContent =
+            "⚠️ Police Station منتخب کریں";
+
+        msg.className =
+            "modal-msg error";
+
+        return;
+
+    }
+
+
+    if (!area) {
+
+        msg.textContent =
+            "⚠️ Area لکھیں";
+
+        msg.className =
+            "modal-msg error";
+
+        return;
+
+    }
+
+
+    msg.textContent =
+        "⏳ Save ہو رہا ہے...";
+
+
+    msg.className =
+        "modal-msg loading";
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                GOOGLE_SHEET_API,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action: "add",
+
+                            ps: ps,
+
+                            area: area,
+
+                            status: "Pending"
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            result.status ===
+            "success"
+        ) {
+
+
+            msg.textContent =
+                "✅ Pending میں Save ہو گیا";
+
+
+            msg.className =
+                "modal-msg success";
+
+
+            document.getElementById(
+                "newAreaInput"
+            ).value = "";
+
+
+            /*
+             * IMPORTANT:
+             *
+             * یہاں نئے record کو search list میں
+             * add نہیں کیا گیا۔
+             *
+             * Admin approve کرے گا،
+             * پھر reload پر search میں آئے گا۔
+             */
+
+        }
+
+        else {
+
+            throw new Error(
+                result.message ||
+                "Save failed"
+            );
+
+        }
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            error
+        );
+
+
+        msg.textContent =
+            "❌ Save نہیں ہو سکا";
+
+
+        msg.className =
+            "modal-msg error";
+
+    }
+
+}
+
+
+/* ==========================================
+   CORRECTION MODAL
+   ========================================== */
+
+function openCorrectionModal() {
+
+
+    const select =
+        document.getElementById(
+            "correctionPsSelect"
+        );
+
+
+    select.innerHTML =
+        "";
+
+
+    const uniquePS =
+        getUniquePS();
+
+
+    uniquePS.forEach(
+        ps => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                ps;
+
+
+            option.textContent =
+                ps;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    if (!uniquePS.length) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            "";
+
+
+        option.textContent =
+            "Data Load ہونے دیں";
+
+
+        select.appendChild(
+            option
+        );
+
+    }
+
+
+    document.getElementById(
+        "correctionInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "correctionModalMsg"
+    ).textContent = "";
+
+
+    document.getElementById(
+        "correctionModalOverlay"
+    )
+    .classList.add(
+        "open"
+    );
+
+}
+
+
+function closeCorrectionModal() {
+
+
+    document.getElementById(
+        "correctionModalOverlay"
+    )
+    .classList.remove(
+        "open"
+    );
+
+}
+
+
+/* ==========================================
+   SUBMIT CORRECTION
+   ========================================== */
+
+async function submitCorrection() {
+
+
+    const ps =
+        document.getElementById(
+            "correctionPsSelect"
+        ).value.trim();
+
+
+    const correction =
+        document.getElementById(
+            "correctionInput"
+        ).value.trim();
+
+
+    const msg =
+        document.getElementById(
+            "correctionModalMsg"
+        );
+
+
+    if (!ps) {
+
+        msg.textContent =
+            "⚠️ Police Station منتخب کریں";
+
+        msg.className =
+            "modal-msg error";
+
+        return;
+
+    }
+
+
+    if (!correction) {
+
+        msg.textContent =
+            "⚠️ Correction لکھیں";
+
+        msg.className =
+            "modal-msg error";
+
+        return;
+
+    }
+
+
+    msg.textContent =
+        "⏳ Correction Save ہو رہی ہے...";
+
+
+    msg.className =
+        "modal-msg loading";
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                GOOGLE_SHEET_API,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "correction",
+
+                            ps:
+                                ps,
+
+                            correction:
+                                correction,
+
+                            status:
+                                "Pending"
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            result.status ===
+            "success"
+        ) {
+
+
+            msg.textContent =
+                "✅ Correction Pending میں Save ہو گئی";
+
+
+            msg.className =
+                "modal-msg success";
+
+
+            document.getElementById(
+                "correctionInput"
+            ).value = "";
+
+        }
+
+        else {
+
+            throw new Error(
+                result.message ||
+                "Correction failed"
+            );
+
+        }
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            error
+        );
+
+
+        msg.textContent =
+            "❌ Correction Save نہیں ہو سکی";
+
+
+        msg.className =
+            "modal-msg error";
+
+    }
+
+}
+
+
+/* ==========================================
+   OUTSIDE MODAL CLICK
+   ========================================== */
+
+document
+    .getElementById(
+        "addModalOverlay"
+    )
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === this
+            ) {
+
+                closeAddModal();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "correctionModalOverlay"
+    )
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === this
+            ) {
+
+                closeCorrectionModal();
+
+            }
+
+        }
+    );
+
+
+/* ==========================================
+   ESC
+   ========================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeAddModal();
+
+            closeCorrectionModal();
+
+            hideSuggestions();
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   SEARCH INPUT
+   ========================================== */
+
+document
+    .getElementById(
+        "searchBox"
+    )
+    .addEventListener(
+        "input",
+        function() {
+
+            searchData();
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "searchBox"
+    )
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" ||
+                event.key === "Escape"
+            ) {
+
+                hideSuggestions();
+
+            }
+
+        }
+    );
+
+
+/* ==========================================
+   OUTSIDE SEARCH CLICK
+   ========================================== */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+
+        const box =
+            document.getElementById(
+                "suggestionsBox"
+            );
+
+
+        const searchBox =
+            document.getElementById(
+                "searchBox"
+            );
+
+
+        if (
+            box &&
+            !box.contains(
+                event.target
+            ) &&
+            event.target !== searchBox
+        ) {
+
+            hideSuggestions();
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   SECURITY
+   ========================================== */
+
+function escapeHTML(text) {
+
+    return String(text)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* ==========================================
+   PAGE LOAD
+   ========================================== */
+
+window.addEventListener(
+    "DOMContentLoaded",
+    async function() {
+
+        await loadData();
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
