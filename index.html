@@ -12,8 +12,14 @@
    ========================================== */
 @font-face {
     font-family: "Jameel Noori Nastaleeq";
-    src: url("fonts/JameelNooriNastaleeq.woff2") format("woff2"),
-         url("fonts/JameelNooriNastaleeq.ttf") format("truetype");
+    src: local("Jameel Noori Nastaleeq"),
+         local("JameelNooriNastaleeq"),
+         url("fonts/JameelNooriNastaleeq.woff2") format("woff2"),
+         url("fonts/JameelNooriNastaleeq.ttf") format("truetype"),
+         url("fonts/Jameel%20Noori%20Nastaleeq.ttf") format("truetype"),
+         url("fonts/Jameel-Noori-Nastaleeq.ttf") format("truetype"),
+         url("fonts/jameel-noori-nastaleeq.ttf") format("truetype"),
+         url("fonts/JameelNooriNastaleeq.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -59,11 +65,20 @@
     font-family: var(--font-urdu);
 }
 
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+img {
+    max-width: 100%;
+}
+
 html, body, button, input, select, textarea {
     font-family: var(--font-urdu);
 }
 
 body {
+    overflow-x: hidden;
     margin: 0;
     min-height: 100vh;
     padding: 40px 16px;
@@ -508,37 +523,94 @@ button:focus-visible {
    ========================================== */
 @media (max-width: 640px) {
 
-    body { padding: 14px 10px; }
+    body { padding: 16px 12px; }
 
-    .header { padding: 30px 16px 22px; }
+    .header { padding: 20px 8px 0; }
 
     .logo { width: 96px; height: 96px; }
 
-    .main-heading { font-size: 27px; }
+    .main-heading { font-size: 26px; }
 
-        .content { padding: 18px; }
+    .content { padding: 16px 0; }
 
-    .search-area { flex-direction: column; }
+    .search-area {
+        flex-direction: column;
+        gap: 12px;
+    }
 
-    .actions { width: 100%; }
+    .search-wrap {
+        flex: none;
+        width: 100%;
+    }
+
+    #searchBox { font-size: 21px; }
+
+    .actions {
+        width: 100%;
+        flex-wrap: nowrap;
+        gap: 8px;
+    }
 
     .actions button {
         flex: 1;
-        padding: 0 10px;
+        min-width: 0;
+        padding: 0 6px;
+        font-size: 17px;
+        min-height: 52px;
     }
 
-    #searchBox { font-size: 22px; }
+    .suggestions-box {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .suggestion-item {
+        flex-wrap: wrap;
+        gap: 2px 12px;
+        padding: 10px 14px;
+    }
 
     .suggestion-area { font-size: 19px; }
 
-    .suggestion-ps { font-size: 20px;
-    font-weight: 700;
-}
+    .suggestion-ps {
+        font-size: 19px;
+        font-weight: 700;
+        max-width: 100%;
+    }
 
     #toast {
-        min-width: 260px;
+        min-width: 0;
+        width: 92%;
         max-width: 92%;
+        font-size: 17px;
     }
+
+    .modal-box {
+        padding: 20px;
+        border-radius: 18px;
+    }
+
+    .modal-box h3 { font-size: 22px; }
+
+    .modal-actions button {
+        font-size: 17px;
+        min-height: 50px;
+    }
+}
+
+/* Chhoti screens (360px aur kam) */
+@media (max-width: 380px) {
+
+    .main-heading { font-size: 23px; }
+
+    .logo { width: 84px; height: 84px; }
+
+    #searchBox { font-size: 19px; }
+
+    .actions button { font-size: 15px; }
+
+    .suggestion-area,
+    .suggestion-ps { font-size: 17px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
